@@ -15,9 +15,26 @@
     </title>
   </head>
   <body>
-    
-    {% block content %}
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category == 'success' %}
+            <div class="alert alert-success" role="alert">
+          {% else %}
+            <div class="alert alert-danger" role="alert">
+          {% endif %}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}
+    
     {% endblock %}
 
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
