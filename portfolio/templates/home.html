@@ -4,12 +4,22 @@
 {% endblock %}
 
 {% block content %}
+<div class="container text-center mt-5">
+    <h1>Welcome to RateMyBuilding</h1>
+    <p class="lead">Find and rate buildings around you. Join the online community for building reviews.</p>
 
+    <!-- Placeholder for a potential search bar in the future -->
+    <div class="input-group mb-3 mt-4">
+        <input type="text" class="form-control" placeholder="Search for a building..." aria-label="Search for a building">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button">Search</button>
+        </div>
+    </div>
 
-<h1>Hello Everyone, This is Home Page</h1>
-<p>Hi Binfeng</p>
-<a class="nav-link" href="{{ url_for('register_page') }}">Click here to Register for an Account</a>
-
-
-
+    <!-- Buttons -->
+    <div class="mt-4">
+        <a class="btn btn-primary" href="{{ url_for('register_page') }}">Register for an Account</a>
+        <a class="btn btn-secondary ml-3" href="{{ url_for('login_page') }}">Login to your Account</a>
+    </div>
+</div>
 {% endblock %}
