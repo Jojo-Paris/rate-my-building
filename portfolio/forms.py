@@ -36,3 +36,19 @@ class LoginForm(FlaskForm):
     password = PasswordField(label='Password', validators=[DataRequired(message="Password is required")])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField(label='Sign in')
+
+class UpdateEmailForm(FlaskForm):
+    new_email = StringField('New Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Update Email')
+
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField('Old Password', validators=[DataRequired()])
+    new_password = PasswordField('New Password', validators=[DataRequired(), Length(min=6, max=12)])
+    confirm_password = PasswordField('Confirm New Password', validators=[DataRequired(), EqualTo('new_password')])
+    submit = SubmitField('Change Password')
+
+    def validate_old_password(self, old_password):
+        # Check if the old password is correct
+        if not current_user.check_password_correction(attempted_password=old_password.data):
+            raise ValidationError('Incorrect old password.')
+

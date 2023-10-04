@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}
+    Update Email
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Update Email</h1>
+    <form method="POST">
+        <!-- Include CSRF token for security -->
+        {{ form.hidden_tag() }}
+        {{ form.new_email.label }}<br>
+        {{ form.new_email }}<br>
+        <input type="submit" value="Update Email" class="btn btn-primary mt-2">
+    </form>
+</div>
+{% endblock %}
