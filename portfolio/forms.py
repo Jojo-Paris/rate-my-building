@@ -81,7 +81,7 @@ class ReviewForm(FlaskForm):
     building = SelectField('Choose a Building', choices=building_names, validators=[DataRequired()])
     aesthetics = SelectField('Aesthetics', choices=[(i, str(i)) for i in range(1, 6)], validators=[DataRequired()])
     cleanliness = SelectField('Cleanliness', choices=[(i, str(i)) for i in range(1, 6)], validators=[DataRequired()])
-    peripherals = SelectField('Peripheral', choices=[(i, str(i)) for i in range(1, 6)], validators=[DataRequired()])
+    peripherals = SelectField('Peripherals', choices=[(i, str(i)) for i in range(1, 6)], validators=[DataRequired()])
     vibes = SelectField('Vibes', choices=[(i, str(i)) for i in range(1, 6)], validators=[DataRequired()])
     content = TextAreaField('Review (max 750 words)', validators=[DataRequired(), Length(max=750)])
     classroom_name = StringField('Classroom Name', validators=[DataRequired()])
