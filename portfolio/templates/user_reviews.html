@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}
+    View Your Reviews
+{% endblock %}
+
+{% block content %}
+
+{% if current_user.userReview %}
+    {% for review in current_user.userReview %}
+        <div class="card mt-4">
+            <h3 style="color: #152238;">{{ review.buildingName}}</h3>
+            <p style="color: #152238;">Likes: {{ review.likes }}</p>
+            <p style="color: #152238;">Dislikes: {{ review.dislikes }}</p>
+            <p style="color: #152238;">Aesthetics: {{ review.aesthetics }}</p>
+            <p style="color: #152238;">Cleanliness: {{ review.cleanliness }}</p>
+            <p style="color: #152238;">Peripherals: {{ review.peripherals }}</p>
+            <p style="color: #152238;">Description: {{ review.description }}</p>
+            {% if review.room == '' %}
+            {% else %}
+            <p style="color: #152238;">Room: {{ review.room }}</p>
+            {% endif %}
+            <br>
+            <a class="navbar-brand" onclick="return confirmDeletion()">
+                <img src="{{ url_for('static', filename='img/trash.svg') }}" alt="delete button" height="30">
+            </a>
+        </div>
+    {% endfor %}
+{% else %}
+    <p style="color: #152238;">You currently do not own have any made reviews.</p>
+{% endif %}
+
+{% endblock %}
