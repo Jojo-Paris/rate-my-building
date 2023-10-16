@@ -51,15 +51,5 @@
             <button type="button" class="btn btn-light ml-2" onclick="window.history.back();">Back</button>
         </div>
     </form>
-    
-    <!-- Display the submitted review data if available -->
-    {% if review_data %}
-        <h2>Submitted Review Data</h2>
-        <ul>
-            {% for key, value in review_data.items() %}
-                <li><strong>{{ key }}:</strong> {{ value }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
 </div>
 {% endblock %}

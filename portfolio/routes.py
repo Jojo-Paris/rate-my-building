@@ -1,10 +1,11 @@
 import string, secrets
 from portfolio import app, mail, Message, func
 from flask import render_template, redirect, url_for, flash, request
-from portfolio.models import User,Review
+from portfolio.models import User, Review
 from portfolio.forms import RegisterForm, LoginForm, UpdateEmailForm, ChangePasswordForm, ForgotPasswordForm, ResetPassword, ReviewForm
 from portfolio import db
 from flask_login import login_user, logout_user, login_required, current_user
+from datetime import datetime
 import os
 
 @app.route("/")
@@ -56,7 +57,6 @@ def login_page():
     return render_template('login.html', form=form)
 
 @app.route('/logout')
-@login_required
 def logout_page():
     logout_user()
     flash("You have been logged out. See you again!", category='info')
@@ -153,16 +153,22 @@ def review_page():
     review_data = None  # Initialize a variable to store the review data
 
     if form.validate_on_submit():
-        # Extract the review data from the form
-        review_data = {
-            'Building Name': form.building.data,
-            'Aesthetics': form.aesthetics.data,
-            'Cleanliness': form.cleanliness.data,
-            'Peripherals': form.peripherals.data,
-            'Vibes': form.vibes.data,
-            'Comments': form.content.data,
-            'Classroom Name': form.classroom_name.data
-        }
-        flash('Review submitted successfully!', category='success')
+        # Extract the review data from the form and save in database
+        review_to_create = Review(
+            buildingName = form.building.data,
+            aesthetics = int(form.aesthetics.data),
+            cleanliness = int(form.cleanliness.data),
+            peripherals = int(form.peripherals.data),
+            vibes = int(form.vibes.data),
+            description = form.content.data,
+            room = form.classroom_name.data,
+            date_created = datetime.utcnow(),
+            owner = current_user.id
+        )
 
-    return render_template('review.html', form=form, review_data=review_data)
+        db.session.add(review_to_create)
+        db.session.commit()
+        flash('Review submitted successfully!', category='success')
+        return redirect(url_for('logged_in_page'))
+
+    return render_template('review.html', form=form)
