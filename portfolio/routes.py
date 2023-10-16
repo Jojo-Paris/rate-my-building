@@ -147,6 +147,31 @@ def generate_reset_token(length=32):
     token = ''.join(secrets.choice(characters) for _ in range(length))
     return token
 
+@app.route('/review', methods=['GET', 'POST'])
+def review_page():
+    form = ReviewForm()
+
+    if form.validate_on_submit():
+        # Extract the review data from the form and save in database
+        review_to_create = Review(
+            buildingName = form.building.data,
+            aesthetics = int(form.aesthetics.data),
+            cleanliness = int(form.cleanliness.data),
+            peripherals = int(form.peripherals.data),
+            vibes = int(form.vibes.data),
+            description = form.content.data,
+            room = form.classroom_name.data,
+            date_created = datetime.utcnow(),
+            owner = current_user.id
+        )
+
+        db.session.add(review_to_create)
+        db.session.commit()
+        flash('Review submitted successfully!', category='success')
+        return redirect(url_for('logged_in_page'))
+
+    return render_template('review.html', form=form)
+
 @app.route('/view-user-review')
 
 def view_user_review_page():
