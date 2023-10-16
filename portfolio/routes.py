@@ -1,8 +1,8 @@
 import string, secrets
 from portfolio import app, mail, Message, func
 from flask import render_template, redirect, url_for, flash, request
-from portfolio.models import User
-from portfolio.forms import RegisterForm, LoginForm, UpdateEmailForm, ChangePasswordForm, ForgotPasswordForm, ResetPassword
+from portfolio.models import User,Review
+from portfolio.forms import RegisterForm, LoginForm, UpdateEmailForm, ChangePasswordForm, ForgotPasswordForm, ResetPassword, ReviewForm
 from portfolio import db
 from flask_login import login_user, logout_user, login_required, current_user
 import os
@@ -146,4 +146,23 @@ def generate_reset_token(length=32):
     characters = string.ascii_letters + string.digits
     token = ''.join(secrets.choice(characters) for _ in range(length))
     return token
-    
+
+@app.route('/review', methods=['GET', 'POST'])
+def review_page():
+    form = ReviewForm()
+    review_data = None  # Initialize a variable to store the review data
+
+    if form.validate_on_submit():
+        # Extract the review data from the form
+        review_data = {
+            'Building Name': form.building.data,
+            'Aesthetics': form.aesthetics.data,
+            'Cleanliness': form.cleanliness.data,
+            'Peripherals': form.peripherals.data,
+            'Vibes': form.vibes.data,
+            'Comments': form.content.data,
+            'Classroom Name': form.classroom_name.data
+        }
+        flash('Review submitted successfully!', category='success')
+
+    return render_template('review.html', form=form, review_data=review_data)
