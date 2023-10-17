@@ -5,16 +5,31 @@
 
 {% block content %}
 
+<h1>Your Reviews:</h1>
+
 {% if current_user.userReview %}
     {% for review in current_user.userReview %}
         <div class="card mt-4">
-            <h3 style="color: #152238;">{{ review.buildingName}}</h3>
-            <p style="color: #152238;">Likes: {{ review.likes }}</p>
-            <p style="color: #152238;">Dislikes: {{ review.dislikes }}</p>
-            <p style="color: #152238;">Aesthetics: {{ review.aesthetics }}</p>
-            <p style="color: #152238;">Cleanliness: {{ review.cleanliness }}</p>
-            <p style="color: #152238;">Peripherals: {{ review.peripherals }}</p>
-            <p style="color: #152238;">Description: {{ review.description }}</p>
+            <u><h3 style="color: #152238;">{{ review.buildingName}}</h3></u>
+            
+            <div class="date">
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <b><span style="color: #152238;">{{ review.date_created.strftime('%m-%d-%Y') }}</b></span>
+            </div>
+            <br>
+
+            <div class="aesthetics-cleanliness">
+                <span style="color: #152238;">Aesthetics: <b>{{ review.aesthetics }}</b></span>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span style="color: #152238;">Cleanliness: <b>{{ review.cleanliness }}</b></span>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span style="color: #152238;">Peripherals: <b>{{ review.peripherals }}</b></span>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span style="color: #152238;">Vibes: <b>{{ review.vibes }}</b></span>
+            </div>
+            <br>
+            
+            <p style="color: #152238;">{{ review.description }}</p>
             {% if review.room == '' %}
             {% else %}
             <p style="color: #152238;">Room: {{ review.room }}</p>
