@@ -19,7 +19,7 @@
             {% else %}
             <p style="color: #152238;">Room: {{ review.room }}</p>
             {% endif %}
-            <a href="/delete_review/{{review.id }}">
+            <a href="/delete_review/{{review.id }}" class="navbar-brand" onclick="return confirmDeletion()">
                 <button type="button" class="btn btn-danger">
                 Delete
                 </button>
