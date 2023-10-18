@@ -1,10 +1,11 @@
 import string, secrets
 from portfolio import app, mail, Message, func
 from flask import render_template, redirect, url_for, flash, request
-from portfolio.models import User
-from portfolio.forms import RegisterForm, LoginForm, UpdateEmailForm, ChangePasswordForm, ForgotPasswordForm, ResetPassword
+from portfolio.models import User, Review
+from portfolio.forms import RegisterForm, LoginForm, UpdateEmailForm, ChangePasswordForm, ForgotPasswordForm, ResetPassword, ReviewForm
 from portfolio import db
 from flask_login import login_user, logout_user, login_required, current_user
+from datetime import datetime
 import os
 
 @app.route("/")
@@ -56,7 +57,6 @@ def login_page():
     return render_template('login.html', form=form)
 
 @app.route('/logout')
-@login_required
 def logout_page():
     logout_user()
     flash("You have been logged out. See you again!", category='info')
@@ -146,4 +146,46 @@ def generate_reset_token(length=32):
     characters = string.ascii_letters + string.digits
     token = ''.join(secrets.choice(characters) for _ in range(length))
     return token
-    
+
+@app.route('/review', methods=['GET', 'POST'])
+def review_page():
+    form = ReviewForm()
+
+    if form.validate_on_submit():
+        # Extract the review data from the form and save in database
+        review_to_create = Review(
+            buildingName = form.building.data,
+            aesthetics = int(form.aesthetics.data),
+            cleanliness = int(form.cleanliness.data),
+            peripherals = int(form.peripherals.data),
+            vibes = int(form.vibes.data),
+            description = form.content.data,
+            room = form.classroom_name.data,
+            date_created = datetime.utcnow(),
+            owner = current_user.id
+        )
+
+        db.session.add(review_to_create)
+        db.session.commit()
+        flash('Review submitted successfully!', category='success')
+        return redirect(url_for('logged_in_page'))
+
+    return render_template('review.html', form=form)
+
+@app.route('/view-user-review')
+
+def view_user_review_page():
+
+    return render_template('user_reviews.html')    
+
+@app.route('/delete-review/<int:review_id>', methods=['GET'])
+def delete_review(review_id):
+    review = Review.query.get(review_id)
+    if review:
+        db.session.delete(review)
+        db.session.commit()
+        flash('Review deleted successfully!', category='success')
+    else:
+        flash('Review not found or unable to delete.', category='error')
+
+    return redirect(url_for("view_user_review_page"))

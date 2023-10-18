@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DecimalField, IntegerField, validators, BooleanField
+from wtforms import (StringField, PasswordField, SubmitField, DecimalField, 
+                     IntegerField, validators, BooleanField, SelectField, TextAreaField)
 from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError, NumberRange
 from portfolio.models import User
 from flask_login import current_user
@@ -71,4 +72,18 @@ class ResetPassword(FlaskForm):
             validators.DataRequired(message="Password is required."),
         ])
     SubmitField = SubmitField('Submit')
+
+class ReviewForm(FlaskForm):
+    
+    with open('building_names.txt', 'r') as file:
+        building_names = [(line.strip(), line.strip()) for line in file]
+
+    building = SelectField('Choose a Building', choices=building_names, validators=[DataRequired()])
+    aesthetics = SelectField('Aesthetics', choices=[(i, str(i)) for i in range(1, 6)], validators=[DataRequired()])
+    cleanliness = SelectField('Cleanliness', choices=[(i, str(i)) for i in range(1, 6)], validators=[DataRequired()])
+    peripherals = SelectField('Peripherals', choices=[(i, str(i)) for i in range(1, 6)], validators=[DataRequired()])
+    vibes = SelectField('Vibes', choices=[(i, str(i)) for i in range(1, 6)], validators=[DataRequired()])
+    content = TextAreaField('Review (max 750 words)', validators=[DataRequired(), Length(max=750)])
+    classroom_name = StringField('Classroom Name', validators=[Length(max=50)])
+    submit = SubmitField('Submit Review')
 
