@@ -177,3 +177,15 @@ def review_page():
 def view_user_review_page():
 
     return render_template('user_reviews.html')    
+
+@app.route('/delete-review/<int:review_id>', methods=['GET'])
+def delete_review(review_id):
+    review = Review.query.get(review_id)
+    if review:
+        db.session.delete(review)
+        db.session.commit()
+        flash('Review deleted successfully!', category='success')
+    else:
+        flash('Review not found or unable to delete.', category='error')
+
+    return redirect(url_for("view_user_review_page"))

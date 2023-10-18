@@ -8,21 +8,41 @@
 {% if current_user.userReview %}
     {% for review in current_user.userReview %}
         <div class="card mt-4">
-            <h3 style="color: #152238;">{{ review.buildingName}}</h3>
-            <p style="color: #152238;">Likes: {{ review.likes }}</p>
-            <p style="color: #152238;">Dislikes: {{ review.dislikes }}</p>
-            <p style="color: #152238;">Aesthetics: {{ review.aesthetics }}</p>
-            <p style="color: #152238;">Cleanliness: {{ review.cleanliness }}</p>
-            <p style="color: #152238;">Peripherals: {{ review.peripherals }}</p>
-            <p style="color: #152238;">Description: {{ review.description }}</p>
+            <div class="card-header">
+                <h3>{{ review.buildingName}}</h3>
+            </div>
+            <div class="date">
+                <br>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <b><span style="color: #152238;">{{ review.date_created.strftime('%m-%d-%Y') }}</b></span>
+            </div>
+            <br>
+            <div class="card-body">
+                <div class="aesthetics-cleanliness">
+                    <span style="color: #152238;">Aesthetics: <b>{{ review.aesthetics }}</b></span>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span style="color: #152238;">Cleanliness: <b>{{ review.cleanliness }}</b></span>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span style="color: #152238;">Peripherals: <b>{{ review.peripherals }}</b></span>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span style="color: #152238;">Vibes: <b>{{ review.vibes }}</b></span>
+                </div>
+                <br>
+                <p style="color: #152238;">{{ review.description }}</p>
             {% if review.room == '' %}
             {% else %}
-            <p style="color: #152238;">Room: {{ review.room }}</p>
+                <p style="color: #152238;">Room: {{ review.room }}</p>
             {% endif %}
             <br>
-            <a class="navbar-brand" onclick="return confirmDeletion()">
-                <img src="{{ url_for('static', filename='img/trash.svg') }}" alt="delete button" height="30">
-            </a>
+            <div class="button-group">
+                <a class="btn btn-danger ml-3" onclick="return confirmDeletion()" href="{{ url_for('delete_review', review_id=review.id) }}">
+                    <img src="{{ url_for('static', filename='img/trash.svg') }}" alt="delete button" height="30">
+                </a>
+                <a class="btn btn-info ml-3" href="#">Edit Review</a>
+                </div>
+            </div>
+            
+            
         </div>
     {% endfor %}
 {% else %}
