@@ -19,13 +19,16 @@
             {% else %}
             <p style="color: #152238;">Room: {{ review.room }}</p>
             {% endif %}
-            <br>
-            <a class="navbar-brand" onclick="return confirmDeletion()">
-                <img src="{{ url_for('static', filename='img/trash.svg') }}" alt="delete button" height="30">
+            <a href="/delete_review/{{review.id }}">
+                <button type="button" class="btn btn-danger">
+                Delete
+                </button>
             </a>
         </div>
     {% endfor %}
 {% else %}
+    <br>
+    <br>
     <p style="color: #152238;">You currently do not own have any made reviews.</p>
 {% endif %}
 
