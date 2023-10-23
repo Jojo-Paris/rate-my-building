@@ -210,8 +210,8 @@ def delete_review(id):
         db.session.delete(review_to_delete)
         db.session.commit()
         flash("Review deleted successfully!", category='success')
-        return redirect(url_for('view_user_review_page'))
+        return redirect(url_for('view_user_review'))
 
     except:
         flash("Review not found or unable to delete.", category='error')
-        return redirect(url_for('view_user_review_page'))
+        return redirect(url_for('view_user_review'))
