@@ -11,7 +11,8 @@ import os
 @app.route("/")
 @app.route("/home")
 def home_page():
-    return render_template('home.html')
+    building_names_list = get_building_names_from_file()
+    return render_template('home.html', building_names=building_names_list)
 
 @app.route("/register", methods=['POST', 'GET'])
 def register_page():
@@ -215,3 +216,53 @@ def delete_review(id):
     except:
         flash("Review not found or unable to delete.", category='error')
         return redirect(url_for('view_user_review'))
+
+@app.route('/building/<building_name>', methods=['GET'])
+def building_profile(building_name):
+    reviews = Review.query.filter_by(buildingName=building_name).all()
+
+    total_aesthetics, total_cleanliness, total_peripherals, total_vibes = 0, 0, 0, 0
+    total_ratings = len(reviews)  # Calculate the total number of ratings
+
+    for review in reviews:
+        total_aesthetics += review.aesthetics
+        total_cleanliness += review.cleanliness
+        total_peripherals += review.peripherals
+        total_vibes += review.vibes
+
+    avg_aesthetics = total_aesthetics / total_ratings if total_ratings > 0 else 0
+    avg_cleanliness = total_cleanliness / total_ratings if total_ratings > 0 else 0
+    avg_peripherals = total_peripherals / total_ratings if total_ratings > 0 else 0
+    avg_vibes = total_vibes / total_ratings if total_ratings > 0 else 0
+
+    overall_quality = (avg_aesthetics + avg_cleanliness + avg_peripherals + avg_vibes) / 4
+
+    return render_template('building_profile.html', 
+                           building_name=building_name, 
+                           avg_overall_rating=overall_quality,  # Pass the overall average rating
+                           total_ratings=total_ratings,  # Pass the total number of ratings
+                           avg_aesthetics=avg_aesthetics,
+                           avg_cleanliness=avg_cleanliness,
+                           avg_peripherals=avg_peripherals,
+                           avg_vibes=avg_vibes,
+                           reviews=reviews)
+
+@app.route('/submit_building', methods=['GET'])
+def submit_building():
+    building_name = request.args.get('building_name')
+    return redirect(url_for('building_profile', building_name=building_name))
+
+def get_building_names_from_file():
+    """Read building names from the building_names.txtr file."""
+    with open('building_names.txt', 'r') as f:
+        building_names = f.readlines()
+    return [name.strip() for name in building_names]  # Remove any extra spaces or newlines
+
+@app.route('/write_review/<building_name>', methods=['GET'])
+@login_required
+def write_review(building_name):
+    # Create a ReviewForm instance and set the building_name
+    form = ReviewForm()
+    form.building.data = building_name
+
+    return render_template('review.html', form=form)

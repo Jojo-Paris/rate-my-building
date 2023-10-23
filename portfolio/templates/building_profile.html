@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <!-- Building Name -->
+    <div class="row">
+        <div class="col-md-12">
+            <h1>{{ building_name }}</h1>
+        </div>
+    </div>
+
+    <!-- Overall Quality and Rating Distribution -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h2><span class="badge badge-secondary">{{avg_overall_rating}}/5</span></h2>
+            <p>Overall Quality Based on {{ total_ratings }} ratings</p>
+        </div>
+        <div class="col-md-6 text-right">
+            <h3>Rating Distribution:</h3>
+            <p><strong>Aesthetics:</strong> {{ avg_aesthetics}}/5</p>
+            <p><strong>Cleanliness:</strong> {{ avg_cleanliness}}/5</p>
+            <p><strong>Peripherals:</strong> {{ avg_peripherals}}/5</p>
+            <p><strong>Vibes:</strong> {{ avg_vibes}}/5</p>
+        </div>
+    </div>
+
+    <!-- Write a review button -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <a class="btn btn-primary" href="{{ url_for('write_review', building_name=building_name) }}">Write a Review</a>
+        </div>
+    </div>
+
+ <!-- List of Reviews -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h3>{{ total_ratings }} Users Ratings:</h3>
+        {% for review in reviews %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <strong>Date:</strong> {{ review.date_created.strftime('%Y-%m-%d') }}
+            </div>
+            <div class="card-body">
+                <div class="review-scores">
+                    <span style="color: #152238;">Aesthetics: <b>{{ review.aesthetics }}</b></span>
+                    <span style="color: #152238;">Cleanliness: <b>{{ review.cleanliness }}</b></span>
+                    <span style="color: #152238;">Peripherals: <b>{{ review.peripherals }}</b></span>
+                    <span style="color: #152238;">Vibes: <b>{{ review.vibes }}</b></span>
+                </div>
+                <br>
+                <p style="color: #152238;">{{ review.description }}</p>
+                {% if review.room %}
+                    <p style="color: #152238;">Room: {{ review.room }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
