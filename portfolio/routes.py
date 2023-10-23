@@ -172,9 +172,33 @@ def review_page():
 
     return render_template('review.html', form=form)
 
-@app.route('/view-user-review')
+@app.route('/view-user-review/edit/<int:review_id>', methods=['GET', 'POST'])
+def edit_user_review(review_id):
+    review = Review.query.get_or_404(review_id)
+    form = ReviewForm(obj=review)  # Populate the form with existing review data
 
-def view_user_review_page():
+    if form.validate_on_submit():
+        # Update the review data
+        review.buildingName = form.building.data
+        review.aesthetics = int(form.aesthetics.data)
+        review.cleanliness = int(form.cleanliness.data)
+        review.peripherals = int(form.peripherals.data)
+        review.vibes = int(form.vibes.data)
+        review.description = form.content.data
+        review.room = form.classroom_name.data
+
+        db.session.add(review)
+        db.session.commit()
+        flash('Review updated successfully!', category='success')
+        return redirect(url_for('view_user_review'))
+
+    form.content.data = review.description  # Set the initial value for the content field
+    return render_template('edit_review.html', form=form, review=review)
+
+
+
+@app.route('/view-user-review')
+def view_user_review():
 
     return render_template('user_reviews.html')    
 

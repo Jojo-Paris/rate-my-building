@@ -78,7 +78,7 @@ class ReviewForm(FlaskForm):
     with open('building_names.txt', 'r') as file:
         building_names = [(line.strip(), line.strip()) for line in file]
 
-    building = SelectField('Choose a Building', choices=building_names, validators=[DataRequired()])
+    building = SelectField('Building', choices=building_names, validators=[DataRequired()])
     aesthetics = SelectField('Aesthetics', choices=[(i, str(i)) for i in range(1, 6)], validators=[DataRequired()])
     cleanliness = SelectField('Cleanliness', choices=[(i, str(i)) for i in range(1, 6)], validators=[DataRequired()])
     peripherals = SelectField('Peripherals', choices=[(i, str(i)) for i in range(1, 6)], validators=[DataRequired()])
