@@ -202,14 +202,16 @@ def view_user_review():
 
     return render_template('user_reviews.html')    
 
-@app.route('/delete-review/<int:review_id>', methods=['GET'])
-def delete_review(review_id):
-    review = Review.query.get(review_id)
-    if review:
-        db.session.delete(review)
+@app.route('/delete_review/<int:id>')
+def delete_review(id):
+    review_to_delete = Review.query.get_or_404(id)
+    
+    try: 
+        db.session.delete(review_to_delete)
         db.session.commit()
-        flash('Review deleted successfully!', category='success')
-    else:
-        flash('Review not found or unable to delete.', category='error')
+        flash("Review deleted successfully!", category='success')
+        return redirect(url_for('view_user_review_page'))
 
-    return redirect(url_for("view_user_review_page"))
+    except:
+        flash("Review not found or unable to delete.", category='error')
+        return redirect(url_for('view_user_review_page'))
