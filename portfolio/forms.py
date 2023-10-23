@@ -75,7 +75,8 @@ class ResetPassword(FlaskForm):
 
 class ReviewForm(FlaskForm):
     
-    with open('D:/Comp Sci/[491B]/rate-my-building/building_names.txt', 'r') as file:
+    # For Liam: D:/Comp Sci/[491B]/rate-my-building/building_names.txt
+    with open('building_names.txt', 'r') as file:
         building_names = [(line.strip(), line.strip()) for line in file]
 
     building = SelectField('Building', choices=building_names, validators=[DataRequired()])
