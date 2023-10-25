@@ -37,5 +37,6 @@ class Review(db.Model):
     peripherals = db.Column(db.Integer(), nullable=False)
     vibes = db.Column(db.Integer(), nullable=False)
     description = db.Column(db.String(length=750), nullable=False)
+    room = db.Column(db.String(length=50), nullable=True)
     date_created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     owner = db.Column(db.Integer(), db.ForeignKey('user.id'))
