@@ -266,3 +266,46 @@ def write_review(building_name):
     form.building.data = building_name
 
     return render_template('review.html', form=form)
+
+@app.route('/like_review/<int:review_id>', methods=['POST'])
+@login_required
+def like_review(review_id):
+    review = Review.query.get_or_404(review_id)
+     # Check if the user has already liked the review
+    if current_user in review.liked_by:
+        review.likes -= 1
+        review.liked_by.remove(current_user)
+    else:
+        # Check if the user has already disliked the review
+        if current_user in review.disliked_by:
+            review.dislikes -= 1
+            review.disliked_by.remove(current_user)
+        # Increment the like count
+        review.likes += 1
+        review.liked_by.append(current_user)
+    
+    db.session.commit()
+    return redirect(url_for('building_profile', building_name=review.buildingName))
+
+@app.route('/dislike_review/<int:review_id>', methods=['POST'])
+@login_required
+def dislike_review(review_id):
+    review = Review.query.get_or_404(review_id)
+    
+    # Check if the user has already disliked the review
+    if current_user in review.disliked_by:
+        review.dislikes -= 1
+        review.disliked_by.remove(current_user)
+    else:
+        # Check if the user has already liked the review
+        if current_user in review.liked_by:
+            review.likes -= 1
+            review.liked_by.remove(current_user)
+        # Increment the dislike count
+        review.dislikes += 1
+        review.disliked_by.append(current_user)
+    
+    db.session.commit()
+    return redirect(url_for('building_profile', building_name=review.buildingName))
+
+
