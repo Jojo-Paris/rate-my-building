@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+
 <div class="container mt-4">
     <!-- Building Name -->
     <div class="row">
@@ -51,6 +52,17 @@
                 {% if review.room %}
                     <p style="color: #152238;">Room: {{ review.room }}</p>
                 {% endif %}
+                <form method="post" action="{{ url_for('like_review', review_id=review.id) }}">Helpful<button type="submit" class="btn like-button">
+                    <img src="{{ url_for('static', filename='img/thumbs-up.svg') }}" alt="like button" height="22">
+                    <span class="like-count">{{ review.likes }}</span>
+                    <span class="tooltip">Helpful</span>
+               </button></form>
+               <form method="post" action="{{ url_for('dislike_review', review_id=review.id) }}">
+               <button type="submit" class="btn dislike-button">
+                    <img src="{{ url_for('static', filename='img/thumbs-down.svg') }}" alt="dislike button" height="22" style="transform: scaleX(-1);">
+                    <span class="like-count">{{ review.dislikes }}</span>
+                    <span class="tooltip">Not helpful</span>
+                   </button></form>
             </div>
         </div>
         {% endfor %}
