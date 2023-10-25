@@ -1,6 +1,6 @@
 import string, secrets
 from portfolio import app, mail, Message, func
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, jsonify
 from portfolio.models import User, Review
 from portfolio.forms import RegisterForm, LoginForm, UpdateEmailForm, ChangePasswordForm, ForgotPasswordForm, ResetPassword, ReviewForm
 from portfolio import db
@@ -285,7 +285,7 @@ def like_review(review_id):
         review.liked_by.append(current_user)
     
     db.session.commit()
-    return redirect(url_for('building_profile', building_name=review.buildingName))
+    return jsonify({'likes': review.likes})
 
 @app.route('/dislike_review/<int:review_id>', methods=['POST'])
 @login_required
@@ -306,6 +306,7 @@ def dislike_review(review_id):
         review.disliked_by.append(current_user)
     
     db.session.commit()
-    return redirect(url_for('building_profile', building_name=review.buildingName))
+    return jsonify({'dislikes': review.dislikes})
+
 
 
