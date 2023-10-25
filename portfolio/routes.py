@@ -11,7 +11,8 @@ import os
 @app.route("/")
 @app.route("/home")
 def home_page():
-    return render_template('home.html')
+    building_names_list = get_building_names_from_file()
+    return render_template('home.html', building_names=building_names_list)
 
 @app.route("/register", methods=['POST', 'GET'])
 def register_page():
@@ -172,20 +173,96 @@ def review_page():
 
     return render_template('review.html', form=form)
 
-@app.route('/view-user-review')
+@app.route('/view-user-review/edit/<int:review_id>', methods=['GET', 'POST'])
+def edit_user_review(review_id):
+    review = Review.query.get_or_404(review_id)
+    form = ReviewForm(obj=review)  # Populate the form with existing review data
 
-def view_user_review_page():
+    if form.validate_on_submit():
+        # Update the review data
+        review.buildingName = form.building.data
+        review.aesthetics = int(form.aesthetics.data)
+        review.cleanliness = int(form.cleanliness.data)
+        review.peripherals = int(form.peripherals.data)
+        review.vibes = int(form.vibes.data)
+        review.description = form.content.data
+        review.room = form.classroom_name.data
+
+        db.session.add(review)
+        db.session.commit()
+        flash('Review updated successfully!', category='success')
+        return redirect(url_for('view_user_review'))
+
+    form.content.data = review.description  # Set the initial value for the content field
+    return render_template('edit_review.html', form=form, review=review)
+
+
+
+@app.route('/view-user-review')
+def view_user_review():
 
     return render_template('user_reviews.html')    
 
-@app.route('/delete-review/<int:review_id>', methods=['GET'])
-def delete_review(review_id):
-    review = Review.query.get(review_id)
-    if review:
-        db.session.delete(review)
+@app.route('/delete_review/<int:id>')
+def delete_review(id):
+    review_to_delete = Review.query.get_or_404(id)
+    
+    try: 
+        db.session.delete(review_to_delete)
         db.session.commit()
-        flash('Review deleted successfully!', category='success')
-    else:
-        flash('Review not found or unable to delete.', category='error')
+        flash("Review deleted successfully!", category='success')
+        return redirect(url_for('view_user_review'))
 
-    return redirect(url_for("view_user_review_page"))
+    except:
+        flash("Review not found or unable to delete.", category='error')
+        return redirect(url_for('view_user_review'))
+
+@app.route('/building/<building_name>', methods=['GET'])
+def building_profile(building_name):
+    reviews = Review.query.filter_by(buildingName=building_name).all()
+
+    total_aesthetics, total_cleanliness, total_peripherals, total_vibes = 0, 0, 0, 0
+    total_ratings = len(reviews)  # Calculate the total number of ratings
+
+    for review in reviews:
+        total_aesthetics += review.aesthetics
+        total_cleanliness += review.cleanliness
+        total_peripherals += review.peripherals
+        total_vibes += review.vibes
+
+    avg_aesthetics = total_aesthetics / total_ratings if total_ratings > 0 else 0
+    avg_cleanliness = total_cleanliness / total_ratings if total_ratings > 0 else 0
+    avg_peripherals = total_peripherals / total_ratings if total_ratings > 0 else 0
+    avg_vibes = total_vibes / total_ratings if total_ratings > 0 else 0
+
+    overall_quality = (avg_aesthetics + avg_cleanliness + avg_peripherals + avg_vibes) / 4
+
+    return render_template('building_profile.html', 
+                           building_name=building_name, 
+                           avg_overall_rating=overall_quality,  # Pass the overall average rating
+                           total_ratings=total_ratings,  # Pass the total number of ratings
+                           avg_aesthetics=avg_aesthetics,
+                           avg_cleanliness=avg_cleanliness,
+                           avg_peripherals=avg_peripherals,
+                           avg_vibes=avg_vibes,
+                           reviews=reviews)
+
+@app.route('/submit_building', methods=['GET'])
+def submit_building():
+    building_name = request.args.get('building_name')
+    return redirect(url_for('building_profile', building_name=building_name))
+
+def get_building_names_from_file():
+    """Read building names from the building_names.txtr file."""
+    with open('building_names.txt', 'r') as f:
+        building_names = f.readlines()
+    return [name.strip() for name in building_names]  # Remove any extra spaces or newlines
+
+@app.route('/write_review/<building_name>', methods=['GET'])
+@login_required
+def write_review(building_name):
+    # Create a ReviewForm instance and set the building_name
+    form = ReviewForm()
+    form.building.data = building_name
+
+    return render_template('review.html', form=form)

@@ -18,6 +18,17 @@
         </div>
     </div>
 
+<!-- Dropdown for selecting a building -->
+<form action="{{ url_for('submit_building') }}" method="get">
+    <select name="building_name" onchange="this.form.submit()" class="form-control mb-3">
+        <option value="" selected disabled hidden>Select a building</option>
+        {% for building in building_names %}
+            <option value="{{ building }}">{{ building }}</option>
+        {% endfor %}
+    </select>
+</form>
+
+
     {% if current_user.is_authenticated %}
     <div class="mt-4">
         <h2>You are logged In! Click the Write Review Button at the top of the screen to get started ! </h2>

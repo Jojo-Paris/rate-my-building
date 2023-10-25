@@ -14,11 +14,11 @@
         </div>
         <div class="card-body">
             <!-- Buttons for account management -->
-            <a class="btn btn-secondary" href="{{ url_for('account_info') }}">Account Info</a>
+            <a class="btn btn-outline-primary" href="{{ url_for('account_info') }}">Account Info</a>
             <!-- Button to review.html -->
-            <a class="btn btn-info ml-3" href="{{ url_for('review_page') }}">Write a Review</a>
+            <a class="btn btn-outline-info" href="{{ url_for('review_page') }}">Write a Review</a>
 
-            <a href="{{ url_for('view_user_review_page') }}" class="btn btn-info ml-3" >View Your Reviews</a>
+            <a href="{{ url_for('view_user_review') }}" class="btn btn-outline-info" >View Your Reviews</a>
         </div>
     </div>
 
