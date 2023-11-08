@@ -2,7 +2,7 @@ import string, secrets
 from portfolio import app, mail, Message, func
 from flask import render_template, redirect, url_for, flash, request
 from portfolio.models import User, Review
-from portfolio.forms import RegisterForm, LoginForm, UpdateEmailForm, ChangePasswordForm, ForgotPasswordForm, ResetPassword, ReviewForm
+from portfolio.forms import RegisterForm, LoginForm, UpdateEmailForm, ChangePasswordForm, ForgotPasswordForm, ResetPassword, ReviewForm, EditReviewForm
 from portfolio import db
 from flask_login import login_user, logout_user, login_required, current_user
 from datetime import datetime
@@ -176,16 +176,16 @@ def review_page():
 @app.route('/view-user-review/edit/<int:review_id>', methods=['GET', 'POST'])
 def edit_user_review(review_id):
     review = Review.query.get_or_404(review_id)
-    form = ReviewForm(obj=review)  # Populate the form with existing review data
+    form = EditReviewForm(obj=review)  # Populate the form with existing review data
 
     if form.validate_on_submit():
         # Update the review data
-        review.buildingName = form.building.data
         review.aesthetics = int(form.aesthetics.data)
         review.cleanliness = int(form.cleanliness.data)
         review.peripherals = int(form.peripherals.data)
         review.vibes = int(form.vibes.data)
         review.description = form.content.data
+        review.date_created = datetime.utcnow()
         review.room = form.classroom_name.data
 
         db.session.add(review)
@@ -236,6 +236,11 @@ def building_profile(building_name):
     avg_vibes = total_vibes / total_ratings if total_ratings > 0 else 0
 
     overall_quality = (avg_aesthetics + avg_cleanliness + avg_peripherals + avg_vibes) / 4
+    overall_quality = round(overall_quality, 1)
+    avg_aesthetics = round(avg_aesthetics, 1)
+    avg_cleanliness = round(avg_cleanliness, 1)
+    avg_peripherals = round(avg_peripherals, 1)
+    avg_vibes = round(avg_vibes, 1)
 
     return render_template('building_profile.html', 
                            building_name=building_name, 
