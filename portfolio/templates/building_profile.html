@@ -13,6 +13,27 @@
         <div class="col-md-6">
             <h2><span class="badge badge-secondary">{{avg_overall_rating}}/5</span></h2>
             <p>Overall Quality Based on {{ total_ratings }} ratings</p>
+            {% set integer_stars = avg_overall_rating|int %}
+
+            {% for i in range(integer_stars) %}
+                <i class="fas fa-star" style="color: gold"></i>
+            {% endfor %}
+
+            {% if avg_overall_rating|int != avg_overall_rating %}
+                <i class="fas fa-star-half-alt" style="color: gold"></i>
+                {% set total_displayed_stars = integer_stars + 1 %}
+            {% else %}
+                {% set total_displayed_stars = integer_stars %}
+            {% endif %}
+
+            {% set empty_stars = 5 - total_displayed_stars %}
+
+            {% for i in range(empty_stars) %}
+                <i class="far fa-star" style="color: gold"></i>
+            {% endfor %}
+
+
+
         </div>
         <div class="col-md-6 text-right">
             <h3>Rating Distribution:</h3>
@@ -54,6 +75,8 @@
             </div>
         </div>
         {% endfor %}
+        <br>
+        <button type="button" class="btn btn-light ml-2" onclick="window.history.back();">Back</button>
     </div>
 </div>
 {% endblock %}
