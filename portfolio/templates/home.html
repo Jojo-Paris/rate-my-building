@@ -4,41 +4,18 @@
 {% endblock %}
 
 {% block content %}
+<!doctype html>
+<html lang="en">
+<head>
 
-<div class="container text-center mt-5">
-    
-    <h1>Welcome to RateMyBuilding</h1>
-    <p class="lead">Find and rate buildings around you. Join the online community for building reviews.</p>
-
-    <!-- Placeholder for a potential search bar in the future -->
-    <div class="input-group mb-3 mt-4">
-        <input type="text" class="form-control" placeholder="Search for a building..." aria-label="Search for a building">
-        <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button">Search</button>
-        </div>
-    </div>
-
-<!-- Dropdown for selecting a building -->
-<form action="{{ url_for('submit_building') }}" method="get">
-    <select name="building_name" onchange="this.form.submit()" class="form-control mb-3">
-        <option value="" selected disabled hidden>Select a building</option>
-        {% for building in building_names %}
-            <option value="{{ building }}">{{ building }}</option>
-        {% endfor %}
-    </select>
-</form>
+</head>
+<body>
+  
+    <h1>Hello Everyone, This is Home Page</h1>
+    <p></p>
+</body>
+</html>
 
 
-    {% if current_user.is_authenticated %}
-    <div class="mt-4">
-        <h2>You are logged In! Click the Write Review Button at the top of the screen to get started ! </h2>
-    </div>
-    {% else %}
-    <!-- Buttons -->
-        <div class="mt-4">
-            <a class="btn btn-primary" href="{{ url_for('register_page') }}">Register for an Account</a>
-        </div>
-    {% endif %}
-    
-</div>
+
 {% endblock %}
