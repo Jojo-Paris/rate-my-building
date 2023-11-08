@@ -51,6 +51,26 @@
         </div>
     </div>
 
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3>Similar Buildings</h3>
+        </div>
+    </div>
+    <div class="row mt-2">
+        {% for similar_building in similar_buildings %}
+            <div class="col-md-3">
+                <div class="box" style="border: 1px solid #ccc; padding: 10px;">
+                    <h5><a href="{{ url_for('building_profile', building_name=similar_building.building_name) }}">{{ similar_building.building_name }}</a></h5>
+                    <p>Overall Rating: {{ similar_building.avg_overall_rating }} (Based on {{ similar_building.total_ratings }} ratings)</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    
+    
+    
+    
  <!-- List of Reviews -->
 <div class="row mt-4">
     <div class="col-md-12">
