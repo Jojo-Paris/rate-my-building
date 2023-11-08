@@ -11,8 +11,7 @@
         {{ form.hidden_tag() }}
         
         <div class="mb-3">
-            {{ form.building.label(class="form-label") }}
-            {{ form.building(class="form-select", default=review.buildingName) }}
+            <p class="form-text">{{ review.buildingName }}</p>
         </div>      
         
         <div class="mb-3">

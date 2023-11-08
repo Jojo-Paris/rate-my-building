@@ -14,6 +14,27 @@
         <div class="col-md-6">
             <h2><span class="badge badge-secondary">{{avg_overall_rating}}/5</span></h2>
             <p>Overall Quality Based on {{ total_ratings }} ratings</p>
+            {% set integer_stars = avg_overall_rating|int %}
+
+            {% for i in range(integer_stars) %}
+                <i class="fas fa-star" style="color: gold"></i>
+            {% endfor %}
+
+            {% if avg_overall_rating|int != avg_overall_rating %}
+                <i class="fas fa-star-half-alt" style="color: gold"></i>
+                {% set total_displayed_stars = integer_stars + 1 %}
+            {% else %}
+                {% set total_displayed_stars = integer_stars %}
+            {% endif %}
+
+            {% set empty_stars = 5 - total_displayed_stars %}
+
+            {% for i in range(empty_stars) %}
+                <i class="far fa-star" style="color: gold"></i>
+            {% endfor %}
+
+
+
         </div>
         <div class="col-md-6 text-right">
             <h3>Rating Distribution:</h3>
@@ -31,6 +52,26 @@
         </div>
     </div>
 
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3>Similar Buildings</h3>
+        </div>
+    </div>
+    <div class="row mt-2">
+        {% for similar_building in similar_buildings %}
+            <div class="col-md-3">
+                <div class="box" style="border: 1px solid #ccc; padding: 10px;">
+                    <h5><a href="{{ url_for('building_profile', building_name=similar_building.building_name) }}">{{ similar_building.building_name }}</a></h5>
+                    <p>Overall Rating: {{ similar_building.avg_overall_rating }} (Based on {{ similar_building.total_ratings }} ratings)</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    
+    
+    
+    
  <!-- List of Reviews -->
 <div class="row mt-4">
     <div class="col-md-12">
@@ -70,6 +111,8 @@
             </div>
         </div>
         {% endfor %}
+        <br>
+        <button type="button" class="btn btn-light ml-2" onclick="window.history.back();">Back</button>
     </div>
 </div>
 <script>
