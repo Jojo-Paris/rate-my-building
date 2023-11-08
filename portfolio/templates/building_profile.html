@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+
 <div class="container mt-4">
     <!-- Building Name -->
     <div class="row">
@@ -92,6 +93,21 @@
                 {% if review.room %}
                     <p style="color: #152238;">Room: {{ review.room }}</p>
                 {% endif %}
+                <div class="button-container" style="display: flex">
+                <form method="post" action="{{ url_for('like_review', review_id=review.id) }}">
+                    Helpful
+                    <button type="submit" class="btn like-button" data-review-id="{{ review.id }}" style="display: inline-block; margin-right: 2px;">
+                        <img src="{{ url_for('static', filename='img/thumbs-up.svg') }}" alt="like button" height="22">
+                        <span class="like-count">{{ review.likes }}</span>
+                        <span class="tooltip">Helpful</span></button></form>
+                <form method="post" action="{{ url_for('dislike_review', review_id=review.id) }}">
+                    <button type="submit" class="btn dislike-button" data-review-id="{{ review.id }}" style="display: inline-block; margin-right: 2px;">
+                        <img src="{{ url_for('static', filename='img/thumbs-down.svg') }}" alt="dislike button" height="22" style="transform: scaleX(-1);">
+                        <span class="dislike-count">{{ review.dislikes }}</span>
+                        <span class="tooltip">Not helpful</span>
+                    </button>
+                </form>
+            </div>
             </div>
         </div>
         {% endfor %}
@@ -99,4 +115,55 @@
         <button type="button" class="btn btn-light ml-2" onclick="window.history.back();">Back</button>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const likeButtons = document.querySelectorAll('.like-button');
+        const dislikeButtons = document.querySelectorAll('.dislike-button');
+
+        likeButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const reviewId = button.getAttribute('data-review-id');
+                likeReview(reviewId);
+            });
+        });
+
+        dislikeButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const reviewId = button.getAttribute('data-review-id');
+                dislikeReview(reviewId);
+            });
+        });
+
+        function likeReview(reviewId) {
+            // Send a POST request to your Flask route for liking a review
+            fetch(`/like_review/${reviewId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    // Update the like count on the page
+                    const likeCountElement = document.querySelector(`[data-review-id="${reviewId}"] .like-count`);
+                    if (likeCountElement) {
+                        likeCountElement.textContent = data.likes;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function dislikeReview(reviewId) {
+            // Send a POST request to your Flask route for disliking a review
+            fetch(`/dislike_review/${reviewId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    // Update the dislike count on the page
+                    const dislikeCountElement = document.querySelector(`[data-review-id="${reviewId}"] .dislike-count`);
+                    if (dislikeCountElement) {
+                        dislikeCountElement.textContent = data.dislikes;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    });
+</script>
+
 {% endblock %}

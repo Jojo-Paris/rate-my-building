@@ -1,6 +1,6 @@
 import string, secrets
 from portfolio import app, mail, Message, func
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, jsonify
 from portfolio.models import User, Review
 from portfolio.forms import RegisterForm, LoginForm, UpdateEmailForm, ChangePasswordForm, ForgotPasswordForm, ResetPassword, ReviewForm, EditReviewForm
 from portfolio import db
@@ -355,3 +355,46 @@ def search_results():
             })
 
     return render_template('search_results.html', search_results=search_results)
+@app.route('/like_review/<int:review_id>', methods=['POST'])
+@login_required
+def like_review(review_id):
+    review = Review.query.get_or_404(review_id)
+     # Check if the user has already liked the review
+    if current_user in review.liked_by:
+        review.likes -= 1
+        review.liked_by.remove(current_user)
+    else:
+        # Check if the user has already disliked the review
+        if current_user in review.disliked_by:
+            review.dislikes -= 1
+            review.disliked_by.remove(current_user)
+        # Increment the like count
+        review.likes += 1
+        review.liked_by.append(current_user)
+    
+    db.session.commit()
+    return jsonify({'likes': review.likes})
+
+@app.route('/dislike_review/<int:review_id>', methods=['POST'])
+@login_required
+def dislike_review(review_id):
+    review = Review.query.get_or_404(review_id)
+    
+    # Check if the user has already disliked the review
+    if current_user in review.disliked_by:
+        review.dislikes -= 1
+        review.disliked_by.remove(current_user)
+    else:
+        # Check if the user has already liked the review
+        if current_user in review.liked_by:
+            review.likes -= 1
+            review.liked_by.remove(current_user)
+        # Increment the dislike count
+        review.dislikes += 1
+        review.disliked_by.append(current_user)
+    
+    db.session.commit()
+    return jsonify({'dislikes': review.dislikes})
+
+
+

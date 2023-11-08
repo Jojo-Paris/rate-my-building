@@ -40,3 +40,22 @@ class Review(db.Model):
     room = db.Column(db.String(length=50), nullable=True)
     date_created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     owner = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    likes = db.Column(db.Integer(), nullable=False, default=0)
+    dislikes = db.Column(db.Integer(), nullable=False, default=0)
+    # Define a many-to-many relationship with users who liked the review
+    liked_by = db.relationship('User', secondary='liked_reviews', backref='liked_reviews', lazy='dynamic')
+    
+    # Define a many-to-many relationship with users who disliked the review
+    disliked_by = db.relationship('User', secondary='disliked_reviews', backref='disliked_reviews', lazy='dynamic')
+
+# Define a many-to-many association table for liked reviews
+liked_reviews = db.Table('liked_reviews',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('review_id', db.Integer, db.ForeignKey('review.id'), primary_key=True)
+)
+
+# Define a many-to-many association table for disliked reviews
+disliked_reviews = db.Table('disliked_reviews',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('review_id', db.Integer, db.ForeignKey('review.id'), primary_key=True)
+)
