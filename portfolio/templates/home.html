@@ -10,13 +10,19 @@
     <h1>Welcome to RateMyBuilding</h1>
     <p class="lead">Find and rate buildings around you. Join the online community for building reviews.</p>
 
-    <!-- Placeholder for a potential search bar in the future -->
     <div class="input-group mb-3 mt-4">
-        <input type="text" class="form-control" placeholder="Search for a building..." aria-label="Search for a building">
+        <input type="text" class="form-control" id="search-query" placeholder="Search for a building..." aria-label="Search for a building">
         <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button">Search</button>
+            <button class="btn btn-outline-secondary" type="button" id="search-button">Search</button>
         </div>
     </div>
+    
+    <script>
+        document.getElementById('search-button').addEventListener('click', function() {
+            const searchQuery = document.getElementById('search-query').value;
+            window.location.href = `/search?q=${searchQuery}`;
+        });
+    </script>
 
 <!-- Dropdown for selecting a building -->
 <form action="{{ url_for('submit_building') }}" method="get">

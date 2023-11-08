@@ -1,12 +1,13 @@
 import string, secrets
 from portfolio import app, mail, Message, func
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, jsonify
 from portfolio.models import User, Review
 from portfolio.forms import RegisterForm, LoginForm, UpdateEmailForm, ChangePasswordForm, ForgotPasswordForm, ResetPassword, ReviewForm, EditReviewForm
 from portfolio import db
 from flask_login import login_user, logout_user, login_required, current_user
 from datetime import datetime
 import os
+import random
 
 @app.route("/")
 @app.route("/home")
@@ -217,6 +218,16 @@ def delete_review(id):
         flash("Review not found or unable to delete.", category='error')
         return redirect(url_for('view_user_review'))
 
+
+
+import random
+
+# Function to read building names from a file
+def get_building_names_from_file():
+    with open('building_names.txt', 'r') as f:
+        building_names = f.readlines()
+    return [name.strip() for name in building_names]
+
 @app.route('/building/<building_name>', methods=['GET'])
 def building_profile(building_name):
     reviews = Review.query.filter_by(buildingName=building_name).all()
@@ -242,6 +253,32 @@ def building_profile(building_name):
     avg_peripherals = round(avg_peripherals, 1)
     avg_vibes = round(avg_vibes, 1)
 
+    # Create a list of 4 similar buildings
+    similar_buildings = []
+
+    building_names_list = get_building_names_from_file()
+
+    while len(similar_buildings) < 4:
+        random_building = random.choice(building_names_list)
+        if random_building != building_name and random_building not in [b['building_name'] for b in similar_buildings]:
+            # Fetch reviews and calculate ratings for the similar building
+            similar_reviews = Review.query.filter_by(buildingName=random_building).all()
+            similar_total_ratings = len(similar_reviews)
+            if similar_total_ratings > 0:
+                similar_avg_aesthetics = sum(review.aesthetics for review in similar_reviews) / similar_total_ratings
+                similar_avg_cleanliness = sum(review.cleanliness for review in similar_reviews) / similar_total_ratings
+                similar_avg_peripherals = sum(review.peripherals for review in similar_reviews) / similar_total_ratings
+                similar_avg_vibes = sum(review.vibes for review in similar_reviews) / similar_total_ratings
+                similar_avg_overall_rating = (similar_avg_aesthetics + similar_avg_cleanliness + similar_avg_peripherals + similar_avg_vibes) / 4
+            else:
+                similar_avg_overall_rating = 0.0
+
+            similar_buildings.append({
+                'building_name': random_building,
+                'avg_overall_rating': similar_avg_overall_rating,
+                'total_ratings': similar_total_ratings,
+            })
+
     return render_template('building_profile.html', 
                            building_name=building_name, 
                            avg_overall_rating=overall_quality,  # Pass the overall average rating
@@ -250,7 +287,9 @@ def building_profile(building_name):
                            avg_cleanliness=avg_cleanliness,
                            avg_peripherals=avg_peripherals,
                            avg_vibes=avg_vibes,
-                           reviews=reviews)
+                           reviews=reviews,
+                           similar_buildings=similar_buildings)
+
 
 @app.route('/submit_building', methods=['GET'])
 def submit_building():
@@ -271,3 +310,91 @@ def write_review(building_name):
     form.building.data = building_name
 
     return render_template('review.html', form=form)
+
+@app.route('/search', methods=['GET'])
+def search_results():
+    # Get the search query from the URL parameter
+    search_query = request.args.get('q')
+
+    # Retrieve building names from your text file
+    building_names_list = get_building_names_from_file()
+
+    # Filter the building names that match the search query
+    search_results = []
+
+    for building_name in building_names_list:
+        if search_query.lower() in building_name.lower():
+            # Fetch reviews for the building
+            reviews = Review.query.filter_by(buildingName=building_name).all()
+
+            total_aesthetics, total_cleanliness, total_peripherals, total_vibes = 0, 0, 0, 0
+            total_ratings = len(reviews)  # Calculate the total number of ratings
+
+            for review in reviews:
+                total_aesthetics += review.aesthetics
+                total_cleanliness += review.cleanliness
+                total_peripherals += review.peripherals
+                total_vibes += review.vibes
+
+            avg_aesthetics = total_aesthetics / total_ratings if total_ratings > 0 else 0
+            avg_cleanliness = total_cleanliness / total_ratings if total_ratings > 0 else 0
+            avg_peripherals = total_peripherals / total_ratings if total_ratings > 0 else 0
+            avg_vibes = total_vibes / total_ratings if total_ratings > 0 else 0
+
+            overall_quality = (avg_aesthetics + avg_cleanliness + avg_peripherals + avg_vibes) / 4
+
+            # Add the building details and ratings to the search_results list
+            search_results.append({
+                'building_name': building_name,
+                'avg_overall_rating': overall_quality,
+                'total_ratings': total_ratings,
+                'avg_aesthetics': avg_aesthetics,
+                'avg_cleanliness': avg_cleanliness,
+                'avg_peripherals': avg_peripherals,
+                'avg_vibes': avg_vibes,
+            })
+
+    return render_template('search_results.html', search_results=search_results)
+@app.route('/like_review/<int:review_id>', methods=['POST'])
+@login_required
+def like_review(review_id):
+    review = Review.query.get_or_404(review_id)
+     # Check if the user has already liked the review
+    if current_user in review.liked_by:
+        review.likes -= 1
+        review.liked_by.remove(current_user)
+    else:
+        # Check if the user has already disliked the review
+        if current_user in review.disliked_by:
+            review.dislikes -= 1
+            review.disliked_by.remove(current_user)
+        # Increment the like count
+        review.likes += 1
+        review.liked_by.append(current_user)
+    
+    db.session.commit()
+    return jsonify({'likes': review.likes})
+
+@app.route('/dislike_review/<int:review_id>', methods=['POST'])
+@login_required
+def dislike_review(review_id):
+    review = Review.query.get_or_404(review_id)
+    
+    # Check if the user has already disliked the review
+    if current_user in review.disliked_by:
+        review.dislikes -= 1
+        review.disliked_by.remove(current_user)
+    else:
+        # Check if the user has already liked the review
+        if current_user in review.liked_by:
+            review.likes -= 1
+            review.liked_by.remove(current_user)
+        # Increment the dislike count
+        review.dislikes += 1
+        review.disliked_by.append(current_user)
+    
+    db.session.commit()
+    return jsonify({'dislikes': review.dislikes})
+
+
+
