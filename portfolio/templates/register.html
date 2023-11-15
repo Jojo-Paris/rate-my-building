@@ -1,84 +1,109 @@
 {% extends 'base.html' %}
+
 {% block title %}
     Register
 {% endblock %}
 
 {% block content %}
-
-
-<h1>This is the Register Page</h1>
-
-    <body class="text-center">
-        <div class="container">
-            <form method="POST" class="form-register" style="color:white">
+<style>
+  .my-card{
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+</style>
+<section class="vh-100 bg-image">
+  <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+          <div class="card my-card" style="border-radius: 10px;">
+            <div class="card-body p-5">
+              <h2 class="text-uppercase text-center mb-5" style="margin-top: 5px;">Create an account</h2>
+              <form method="POST" action="{{ url_for('register_page') }}">
                 {{ form.hidden_tag() }}
-                <h1 class="h3 mb-3 font-weight-normal"  style="color: #152238;">
-                    Create your Account
-                </h1>
-
-                <p style="color: #152238;">
-                    Create an account to keep track of your portfolio
-                </p>
-
-                <br>
-
-                <div style="color: #152238 ;">
+                <div style="color: #152238;">
+                {{ form.firstName(class="form-control form-control-lg") }}  
                     {{ form.firstName.label() }}
-                </div>
-                {{ form.firstName(class="form-control", placeholder="First Name") }}
-
-                <br>
-
-                <div style="color: #152238 ;">
-                    {{ form.lastName.label() }}
-                </div>
-                {{ form.lastName(class="form-control", placeholder="Last Name") }}
-
-                <br>
-
-                <div style="color: #152238 ;">
-                    {{ form.username.label() }}
-                </div>
-                {{ form.username(class="form-control", placeholder="User Name") }}
-
+                  </div>
                 <br>
 
                 <div style="color: #152238;">
-                    {{ form.email_address.label() }}
+                {{ form.lastName(class="form-control form-control-lg") }}
+                {{ form.lastName.label() }}
                 </div>
-                {{ form.email_address(class="form-control", placeholder="Email Address") }}
-
                 <br>
 
                 <div style="color: #152238;">
-                    {{ form.password1.label() }}
+                  
+                {{ form.username(class="form-control form-control-lg") }}
+                {{ form.username.label() }}
                 </div>
-                {{ form.password1(class="form-control", placeholder="Password") }}
-
                 <br>
 
                 <div style="color: #152238;">
-                    {{ form.password2.label() }}
+                {{ form.email_address(class="form-control form-control-lg") }}
+                {{ form.email_address.label() }}
+                </div>
+                <br>
+
+                <div style="color: #152238;">
+                {{ form.password1(class="form-control form-control-lg") }}
+                {{ form.password1.label() }}
+                </div>
+                <br>
+
+                <div style="color: #152238;">
+                {{ form.password2(class="form-control form-control-lg") }}
+                {{ form.password2.label() }}
+                </div>
+                <br>
+
+                <div class="form-check d-flex justify-content-center mb-5">
+                    <div class="form-check d-flex justify-content-left mb-5">
+                        {{ form.agree_statement(class="form-check-input me-2") }}
+                    </div>
+                    <label class="form-check-label" for="{{ form.agree_statement.id }}" style="color: black;">
+                        I agree with all statements in <a href="#!" class="text-body" id="termsModalLink"><u>Terms of service</u></a>
+                    </label>
                 </div>
 
-                {{ form.password2(class="form-control", placeholder="Confirm Password") }}
+                {{ form.submit(class="btn btn-success btn-block btn-lg") }}
+             
 
                 <br>
-                
-                {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
 
-                <br> 
+                <p class="text-center text-muted mt-5 mb-0">Have already an account? <a href="{{ url_for('login_page') }}"
+                    class="fw-bold text-body"><u>Login here</u></a></p>
+              </form>
 
-                <div class="checkbox mb-3" >
-                    <h6 style="color: #152238;">Already have an account?</h6>
-                    <a class="btn btn-sm btn-secondary" href="{{ url_for('login_page') }}" style="color: #152238;">Login</a>
-                </div>
-
-            </form>
+            </div>
+          </div>
         </div>
-    </body>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Add this script at the end of your register.html file -->
 
 
-
+<div class="modal fade" id="termsModal" tabindex="-1" role="dialog" aria-labelledby="termsModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="termsModalLabel">Terms of Service</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <!-- Add your terms of service content here -->
+              <p>This is an example terms of service content.</p>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+      </div>
+  </div>
+</div>
 
 {% endblock %}
