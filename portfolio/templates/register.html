@@ -7,8 +7,22 @@
 {% block content %}
 <style>
   .my-card{
+    position: relative:
     margin-top: 20px;
     margin-bottom: 20px;
+  }
+  .bg-image {
+    /* Set the background image URL */
+    background-image: url('{{ url_for('static', filename='img/csulb-bldg.png') }}');
+    /* Adjust background properties for positioning and size */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    /* Set minimum height to 100% of the viewport height */
+    min-height: 200vh;
+    /* Set height to 100% of the viewport height */
+    height: 150vh;
+    background-opacity: 0.5;
   }
 </style>
 <section class="vh-100 bg-image">
