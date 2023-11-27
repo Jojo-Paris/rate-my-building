@@ -22,13 +22,6 @@
           <img src="{{ url_for('static', filename='img/school_logo.svg') }}" alt="School Logo" height="30">
       </a>
 
-      <div class="mb-1">
-        <input type="text" class="form-control" id="search-query" placeholder="Search for a building..." aria-label="Search for a building">  
-      </div>
-
-    <div class="mb-1">
-     <button class="btn btn-light" type="button" id="search-button">Search</button>
-    </div>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -102,19 +95,5 @@
         return confirm("Are you sure you want to delete?");
     };
   </script>
-
-<script>
-  document.getElementById('search-button').addEventListener('click', function() {
-      const searchQuery = document.getElementById('search-query').value;
-      window.location.href = `/search?q=${searchQuery}`;
-  });
-</script>
-
-<style>
-  /* Add this style in the head of your HTML or in a separate CSS file */
-  #search-query {
-      max-width: 200px; /* Adjust the maximum width as needed */
-  }
-</style>
 
 </html>
