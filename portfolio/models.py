@@ -59,3 +59,9 @@ disliked_reviews = db.Table('disliked_reviews',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
     db.Column('review_id', db.Integer, db.ForeignKey('review.id'), primary_key=True)
 )
+
+class Building_Link(db.Model):
+    __tablename__ = 'building_link'
+    id = db.Column(db.Integer, primary_key=True)
+    buildingName = db.Column(db.String(20), nullable=False)
+    buildingLink = db.Column(db.String(200), nullable=False)

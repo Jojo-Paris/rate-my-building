@@ -1,3 +1,10 @@
+from portfolio import app, mail, Message, func
+from flask import render_template, redirect, url_for, flash, request, jsonify
+from portfolio.models import User, Review,Building_Link
+from portfolio.forms import RegisterForm, LoginForm, UpdateEmailForm, ChangePasswordForm, ForgotPasswordForm, ResetPassword, ReviewForm, EditReviewForm
+from portfolio import db
+from flask_login import login_user, logout_user, login_required, current_user
+from datetime import datetime
 import os
 import random
 import secrets
@@ -263,6 +270,11 @@ def building_profile(building_name):
     similar_buildings = []
 
     building_names_list = get_building_names_from_file()
+    building_link = Building_Link.query.filter_by(buildingName=building_name).first()
+    if building_link:
+        building_url = building_link.buildingLink
+    else:
+        building_url = None
 
     while len(similar_buildings) < 4:
         random_building = random.choice(building_names_list)
@@ -287,6 +299,7 @@ def building_profile(building_name):
 
     return render_template('building_profile.html', 
                            building_name=building_name, 
+                           building_url=building_url,
                            avg_overall_rating=overall_quality,  # Pass the overall average rating
                            total_ratings=total_ratings,  # Pass the total number of ratings
                            avg_aesthetics=avg_aesthetics,
