@@ -22,6 +22,13 @@
           <img src="{{ url_for('static', filename='img/school_logo.svg') }}" alt="School Logo" height="30">
       </a>
 
+      <div class="mb-1">
+        <input type="text" class="form-control" id="search-query" placeholder="Search for a building..." aria-label="Search for a building">  
+      </div>
+
+    <div class="mb-1">
+     <button class="btn btn-light" type="button" id="search-button">Search</button>
+    </div>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -46,7 +53,7 @@
         {% else %}
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#">FAQs</a>
+            <a class="nav-link" href="{{ url_for('register_page') }}">Register</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('login_page') }}">Login</a>
