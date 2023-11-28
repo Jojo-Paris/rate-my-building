@@ -136,25 +136,41 @@
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const likeButtons = document.querySelectorAll('.like-button');
-            const dislikeButtons = document.querySelectorAll('.dislike-button');
-
-            likeButtons.forEach(button => {
-                button.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    const reviewId = button.getAttribute('data-review-id');
-                    likeReview(reviewId);
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const likeButtons = document.querySelectorAll('.like-button');
+                const dislikeButtons = document.querySelectorAll('.dislike-button');
+        
+                likeButtons.forEach(button => {
+                    button.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        const reviewId = button.getAttribute('data-review-id');
+                        if (isLoggedIn()) {
+                            likeReview(reviewId);
+                        } else {
+                            showLoginPopup();
+                        }
+                    });
                 });
-            });
-
-            dislikeButtons.forEach(button => {
-                button.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    const reviewId = button.getAttribute('data-review-id');
-                    dislikeReview(reviewId);
+        
+                dislikeButtons.forEach(button => {
+                    button.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        const reviewId = button.getAttribute('data-review-id');
+                        if (isLoggedIn()) {
+                            dislikeReview(reviewId);
+                        } else {
+                            showLoginPopup();
+                        }
+                    });
                 });
-            });
+        
+                // Function to check if the user is logged in (replace with your actual authentication check)
+                function isLoggedIn() {
+                    // Add your logic to check if the user is logged in
+                    // For example, you can check for the presence of a user session or token
+                    return true; // Replace with your authentication logic
+                }
 
             function likeReview(reviewId) {
                 // Send a POST request to your Flask route for liking a review
