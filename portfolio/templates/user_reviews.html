@@ -14,12 +14,21 @@
                     <h3 class="mb-0">{{ review.buildingName }}</h3>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <div style="background-color: #e9ecef; padding: 5px; border-radius: 5px; display: inline-block;">
-                            Room: <strong>{{ review.room }}</strong>
-                        </div>
-                        <small class="text-muted">{{ review.date_created.strftime('%b %d, %Y') }}</small>
+                    {% if review.room %}
+                <div class="d-flex justify-content-between mb-2">
+                    <div style="background-color: #e9ecef; padding: 5px 10px; border-radius: 5px;">
+                        Room: <strong>{{ review.room }}</strong>
                     </div>
+                    <small class="text-muted">{{ review.date_created.strftime('%b %d, %Y') }}</small>
+                </div>
+                {% else  %}
+                <div class="d-flex justify-content-between mb-2">
+                    <div style="border-radius: 5px;">
+                        <strong></strong>
+                    </div>
+                    <small class="text-muted">{{ review.date_created.strftime('%b %d, %Y') }}</small>
+                </div>
+                {% endif %}
                     <p>{{ review.description }}</p>
                     <div style="display: flex; gap: 15px; margin-bottom: 15px;">
                         <span style="background-color: #ffc107; padding: 3px 6px; border-radius: 3px;">Aesthetics: <b>{{ review.aesthetics }}</b></span>
@@ -39,7 +48,7 @@
     {% endif %}
 
     <div class="text-center mb-4">
-        <button class="btn btn-outline-secondary btn-lg" onclick="window.history.back();">Back</button>
+        <a href="{{ url_for('logged_in_page') }}" class="btn btn-outline-secondary btn-lg ml-2">Back</a>
     </div>
 </div>
 
