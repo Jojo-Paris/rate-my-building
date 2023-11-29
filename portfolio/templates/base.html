@@ -95,13 +95,13 @@
   </body>
   
   <script>
-    function confirmLogout() {
-        return confirm("Are you sure you want to log out?");
-    };
-
-    function confirmDeletion() {
-        return confirm("Are you sure you want to delete?");
-    };
+    function confirmDeletion(reviewId) {
+        // Display a Bootstrap modal for confirmation
+        $('#confirmationModal').modal('show');
+        
+        // Set the reviewId to be deleted
+        $('#deleteReviewBtn').attr('href', '/delete_review/' + reviewId);
+    }
 
     $(document).ready(function () {
       // Show the modal when the "Terms of service" link is clicked
