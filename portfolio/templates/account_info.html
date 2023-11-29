@@ -1,20 +1,41 @@
+<!-- Style block for fade-in effect, can be moved to a CSS file -->
+<style>
+    .fade-in {
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+    }
+    .fade-in.show {
+        opacity: 1;
+    }
+</style>
 {% extends 'base.html' %}
 {% block title %}
     Account Information
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1>Account Information</h1>
-    <p>Email: {{ current_user.email_address }}</p>
+<div class="container mt-5 fade-in">
+
+    <h1 class="display-4 font-weight-normal text-center">Account Information</h1>
     
-    <!-- Flexbox container for the buttons -->
-    <div class="button-container" style="display: flex; gap: 10px;">
-        <a href="{{ url_for('update_email') }}" class="btn btn-primary">Update Email</a>
-        <a href="{{ url_for('change_password') }}" class="btn btn-secondary">Change Password</a>
-    <!-- Back Button -->
+    <p class="lead font-weight-normal text-center">Email: {{ current_user.email_address }}</p>
+    
+    <div class="d-flex justify-content-center align-items-center my-3">
+        <a href="{{ url_for('update_email') }}" class="btn btn-success btn-lg mr-2">Update Email</a>
+        <a href="{{ url_for('change_password') }}" class="btn btn-outline-secondary btn-lg">Change Password</a>
     </div>
-    <br>
-    <button class="btn btn-light" onclick="window.history.back();">Back</button>
+
+    <div class="text-center">
+        <button class="btn btn-outline-secondary mb-2" onclick="window.history.back();">Back</button>
+    </div>
 </div>
+
+<!-- Include the same fade-in animation script -->
+<script>
+    window.addEventListener("DOMContentLoaded", function() {
+        document.querySelector(".fade-in").classList.add("show");
+    });
+</script>
+
+
 {% endblock %}

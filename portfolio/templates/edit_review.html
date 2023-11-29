@@ -4,51 +4,81 @@
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1>Edit Your Review</h1>
+<div class="container mt-5 fade-in">
+    <h1 class="display-4 font-weight-normal text-center">Edit Your Review</h1>
     
-    <form method="POST" action="{{ url_for('edit_user_review', review_id=review.id) }}">
+    <form method="POST" action="{{ url_for('edit_user_review', review_id=review.id) }}" class="my-4">
         {{ form.hidden_tag() }}
         
-        <div class="mb-3">
-            <p class="form-text">{{ review.buildingName }}</p>
-        </div>      
+<!-- Static display for building name -->
+<div class="mb-3">
+    <label class="form-label">Building</label>
+    <input type="text" class="form-control" value="{{ review.buildingName }}" readonly>
+</div>
         
+        <!-- Rating dropdowns with consistent width -->
         <div class="mb-3">
             {{ form.aesthetics.label(class="form-label") }}
-            {{ form.aesthetics(class="form-select", selected=review.aesthetics) }}
+            {{ form.aesthetics(class="form-control form-select rating-width", selected=review.aesthetics) }}
         </div>
         
         <div class="mb-3">
             {{ form.cleanliness.label(class="form-label") }}
-            {{ form.cleanliness(class="form-select", selected=review.cleanliness) }}
+            {{ form.cleanliness(class="form-control form-select rating-width", selected=review.cleanliness) }}
         </div>
         
         <div class="mb-3">
             {{ form.peripherals.label(class="form-label") }}
-            {{ form.peripherals(class="form-select", selected=review.peripherals) }}
+            {{ form.peripherals(class="form-control form-select rating-width", selected=review.peripherals) }}
         </div>
 
         <div class="mb-3">
             {{ form.vibes.label(class="form-label") }}
-            {{ form.vibes(class="form-select", selected=review.vibes) }}
+            {{ form.vibes(class="form-control form-select rating-width", selected=review.vibes) }}
         </div>
         
+        <!-- Textarea for content -->
         <div class="mb-3">
             {{ form.content.label(class="form-label") }}
-            {{ form.content(class="form-control", rows=3) }}
+            {{ form.content(class="form-control", rows=5, value=review.description) }}
         </div>
         
+        <!-- Input for room name -->
         <div class="mb-3">
             {{ form.classroom_name.label(class="form-label") }}
             {{ form.classroom_name(class="form-control", value=review.room) }}
         </div>
-
-        <div class="mb-3">
-            {{ form.submit(class="btn btn-primary") }}
-            <!-- Back Button -->
-            <a href="{{ url_for('view_user_review') }}" class="btn btn-light ml-2">Back</a>
+        
+        <!-- Buttons with consistent styling -->
+        <div class="text-center">
+            {{ form.submit(class="btn btn-success btn-lg") }}
+            <a href="{{ url_for('view_user_review') }}" class="btn btn-outline-secondary btn-lg ml-2">Back</a>
         </div>
     </form>
 </div>
+
+<script>
+    window.addEventListener("DOMContentLoaded", function() {
+        document.querySelector(".fade-in").classList.add("show");
+    });
+</script>
+
+<style>
+    .fade-in {
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+    }
+    .fade-in.show {
+        opacity: 1;
+    }
+    .form-select.rating-width {
+        width: 75px; /* Adjust the width of rating dropdowns */
+    }
+    /* This style is to mimic the dropdown feel for the static building name */
+    .input-group > .form-control[readonly] {
+        background-color: #e9ecef;
+        border-color: #ced4da;
+        cursor: not-allowed;
+    }
+</style>
 {% endblock %}

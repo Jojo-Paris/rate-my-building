@@ -175,7 +175,7 @@ def review_page():
         db.session.add(review_to_create)
         db.session.commit()
         flash('Review submitted successfully!', category='success')
-        return redirect(url_for('logged_in_page'))
+        return redirect(url_for('view_user_review'))
 
     return render_template('review.html', form=form)
 
