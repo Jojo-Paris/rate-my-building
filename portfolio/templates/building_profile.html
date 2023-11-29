@@ -96,12 +96,21 @@
         <div class="card mt-4">
             <div class="card-body">
                 <!-- Room number and timestamp -->
+                {% if review.room %}
                 <div class="d-flex justify-content-between mb-2">
                     <div style="background-color: #e9ecef; padding: 5px 10px; border-radius: 5px;">
                         Room: <strong>{{ review.room }}</strong>
                     </div>
                     <small class="text-muted">{{ review.date_created.strftime('%b %d, %Y') }}</small>
                 </div>
+                {% else  %}
+                <div class="d-flex justify-content-between mb-2">
+                    <div style="border-radius: 5px;">
+                        <strong></strong>
+                    </div>
+                    <small class="text-muted">{{ review.date_created.strftime('%b %d, %Y') }}</small>
+                </div>
+                {% endif %}
                 <!-- Review text -->
                 <p>{{ review.description }}</p>
                 <!-- Rating Badges -->
@@ -113,7 +122,7 @@
                 </div>
                 <!-- Helpful text followed by Like/Dislike Buttons -->
                 <div class="d-flex align-items-center">
-                    <span class="mr-2">Helpful</span>
+                    <span class="mr-2">Helpful?</span>
                     <button type="button" class="btn like-button mr-1" data-review-id="{{ review.id }}">
                         <i class="fas fa-thumbs-up"></i>
                         <span class="like-count">{{ review.likes }}</span>
@@ -126,6 +135,9 @@
             </div>
         </div>
         {% endfor %}
+        <br>
+        <button type="button" class="btn btn-outline-secondary btn-lg ml-2" onclick="window.history.back();">Back</button>
+
     </div>
 </div>
 
