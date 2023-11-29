@@ -105,11 +105,11 @@
                 <!-- Review text -->
                 <p>{{ review.description }}</p>
                 <!-- Rating Badges -->
-                <div class="review-scores my-2">
-                    <span class="badge badge-warning">Aesthetics: {{ review.aesthetics }}</span>
-                    <span class="badge badge-warning">Cleanliness: {{ review.cleanliness }}</span>
-                    <span class="badge badge-warning">Peripherals: {{ review.peripherals }}</span>
-                    <span class="badge badge-warning">Vibes: {{ review.vibes }}</span>
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <span style="background-color: #ffc107; padding: 3px 6px; border-radius: 3px;">Aesthetics: <b>{{ review.aesthetics }}</b></span>
+                    <span style="background-color: #ffc107; padding: 3px 6px; border-radius: 3px;">Cleanliness: <b>{{ review.cleanliness }}</b></span>
+                    <span style="background-color: #ffc107; padding: 3px 6px; border-radius: 3px;">Peripherals: <b>{{ review.peripherals }}</b></span>
+                    <span style="background-color: #ffc107; padding: 3px 6px; border-radius: 3px;">Vibes: <b>{{ review.vibes }}</b></span>
                 </div>
                 <!-- Helpful text followed by Like/Dislike Buttons -->
                 <div class="d-flex align-items-center">
