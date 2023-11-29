@@ -283,7 +283,7 @@ def building_profile(building_name):
                 similar_avg_overall_rating = (similar_avg_aesthetics + similar_avg_cleanliness + similar_avg_peripherals + similar_avg_vibes) / 4
             else:
                 similar_avg_overall_rating = 0.0
-
+            similar_avg_overall_rating = round(similar_avg_overall_rating, 1)
             similar_buildings.append({
                 'building_name': random_building,
                 'avg_overall_rating': similar_avg_overall_rating,
@@ -358,7 +358,7 @@ def search_results():
             avg_vibes = total_vibes / total_ratings if total_ratings > 0 else 0
 
             overall_quality = (avg_aesthetics + avg_cleanliness + avg_peripherals + avg_vibes) / 4
-
+            overall_quality = round(overall_quality, 1)
             # Add the building details and ratings to the search_results list
             search_results.append({
                 'building_name': building_name,
