@@ -87,7 +87,7 @@
 <div class="row mt-4">
     <div class="col-md-6">
         <label for="roomFilter">Filter by Room:</label>
-        <select class="form-control" id="roomFilter" onchange="filterReviews()">
+        <select class="form-control custom-dropdown" id="roomFilter" onchange="filterReviews()">
             <option value="">All Rooms</option>
             {% for room in rooms_with_reviews %}
                 <option value="{{ room }}">{{ room }}</option>
