@@ -13,7 +13,7 @@
   }
   .bg-image {
     /* Set the background image URL */
-    background-image: url('{{ url_for('static', filename='') }}');
+    background-image: url('{{ url_for('static', filename='img/csulb-bldg.png') }}');
     /* Adjust background properties for positioning and size */
     background-size: cover;
     background-position: center;
@@ -77,7 +77,7 @@
                         {{ form.agree_statement(class="form-check-input me-2") }}
                     </div>
                     <label class="form-check-label" for="{{ form.agree_statement.id }}" style="color: black;">
-                        I agree with all statements in <a href="#!" class="text-body" id="termsModalLink"><u>Terms of service</u></a>
+                        I agree with all statements in <a href="#!" class="text-body" id="termsModalLink"><u>Terms of Service</u></a>
                     </label>
                 </div>
 
@@ -86,7 +86,7 @@
 
                 <br>
 
-                <p class="text-center text-muted mt-5 mb-0">Have already an account? <a href="{{ url_for('login_page') }}"
+                <p class="text-center text-muted mt-5 mb-0">Already have an account? <a href="{{ url_for('login_page') }}"
                     class="fw-bold text-body"><u>Login here</u></a></p>
               </form>
 
