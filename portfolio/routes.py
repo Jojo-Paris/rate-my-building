@@ -1,10 +1,3 @@
-from portfolio import app, mail, Message, func
-from flask import render_template, redirect, url_for, flash, request, jsonify
-from portfolio.models import User, Review,Building_Link
-from portfolio.forms import RegisterForm, LoginForm, UpdateEmailForm, ChangePasswordForm, ForgotPasswordForm, ResetPassword, ReviewForm, EditReviewForm
-from portfolio import db
-from flask_login import login_user, logout_user, login_required, current_user
-from datetime import datetime
 import os
 import random
 import secrets
@@ -18,7 +11,7 @@ from portfolio import Message, app, db, func, mail
 from portfolio.forms import (ChangePasswordForm, EditReviewForm,
                              ForgotPasswordForm, LoginForm, RegisterForm,
                              ResetPassword, ReviewForm, UpdateEmailForm)
-from portfolio.models import Review, User
+from portfolio.models import Building_Link, Review, User
 
 
 @app.route("/")
@@ -296,18 +289,22 @@ def building_profile(building_name):
                 'avg_overall_rating': similar_avg_overall_rating,
                 'total_ratings': similar_total_ratings,
             })
+    # Get the list of rooms with reviews for the current building
+    rooms_with_reviews = list(set(review.room for review in reviews if review.room))
 
-    return render_template('building_profile.html', 
-                           building_name=building_name, 
+
+    return render_template('building_profile.html',
+                           building_name=building_name,
                            building_url=building_url,
-                           avg_overall_rating=overall_quality,  # Pass the overall average rating
-                           total_ratings=total_ratings,  # Pass the total number of ratings
+                           avg_overall_rating=overall_quality,
+                           total_ratings=total_ratings,
                            avg_aesthetics=avg_aesthetics,
                            avg_cleanliness=avg_cleanliness,
                            avg_peripherals=avg_peripherals,
                            avg_vibes=avg_vibes,
                            reviews=reviews,
-                           similar_buildings=similar_buildings)
+                           similar_buildings=similar_buildings,
+                           rooms_with_reviews=rooms_with_reviews)
 
 
 @app.route('/submit_building', methods=['GET'])

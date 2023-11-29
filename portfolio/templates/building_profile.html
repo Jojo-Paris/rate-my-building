@@ -83,18 +83,34 @@
         {% endfor %}
     </div>
 
+<!-- Room Filter Dropdown -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <label for="roomFilter">Filter by Room:</label>
+        <select class="form-control" id="roomFilter" onchange="filterReviews()">
+            <option value="">All Rooms</option>
+            {% for room in rooms_with_reviews %}
+                <option value="{{ room }}">{{ room }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
 
 
 
 
     <!-- List of Reviews -->
-    <div class="row mt-4">
+    <div class="row mt-4" id="reviewsContainer">
         <div class="col-md-12">
             <h3>{{ total_ratings }} Users Ratings:</h3>
             {% for review in reviews %}
             <div class="card mt-4">
                 <div class="card-header">
                     <strong>Date:</strong> {{ review.date_created.strftime('%Y-%m-%d') }}
+                    {% if review.room %}
+                        <span class="room-info" style="display: none;">{{review.room}}</span>
+                    {% endif %}
                 </div>
                 <div class="card-body">
                     <div class="review-scores">
@@ -136,6 +152,21 @@
         </div>
     </div>
     <script>
+        function filterReviews() {
+            const selectedRoom = document.getElementById('roomFilter').value;
+            const reviewsContainer = document.getElementById('reviewsContainer');
+            const reviewCards = reviewsContainer.getElementsByClassName('card');
+
+            for (const card of reviewCards) {
+                const roomElement = card.querySelector('.room-info');
+
+                if (!selectedRoom || roomElement.textContent.trim() === selectedRoom) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            }
+        }
         document.addEventListener('DOMContentLoaded', function () {
             const likeButtons = document.querySelectorAll('.like-button');
             const dislikeButtons = document.querySelectorAll('.dislike-button');
