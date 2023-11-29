@@ -5,65 +5,63 @@
     <!-- Building Name -->
     <div class="row">
         <div class="col-md-12">
-            <h1>{{ building_name }}</h1>
+            <h1 class="display-4">{{ building_name }}</h1>
         </div>
     </div>
 
-    <!-- Overall Quality and Rating Distribution -->
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <h2><span class="badge badge-secondary">{{avg_overall_rating}}/5</span></h2>
-            <p>Overall Quality Based on {{ total_ratings }} ratings</p>
-            {% set integer_stars = avg_overall_rating|int %}
+ <!-- Overall Quality and Rating Distribution -->
+ <div class="row mt-4">
+    <div class="col-md-6">
+        <h2><span class="badge badge-secondary">{{avg_overall_rating}}/5</span></h2>
+        <p>Overall Quality Based on {{ total_ratings }} ratings</p>
+        {% set integer_stars = avg_overall_rating|int %}
 
-            {% for i in range(integer_stars) %}
-            <i class="fas fa-star" style="color: gold"></i>
-            {% endfor %}
+        {% for i in range(integer_stars) %}
+        <i class="fas fa-star" style="color: gold"></i>
+        {% endfor %}
 
-            {% if avg_overall_rating|int != avg_overall_rating %}
-            <i class="fas fa-star-half-alt" style="color: gold"></i>
-            {% set total_displayed_stars = integer_stars + 1 %}
-            {% else %}
-            {% set total_displayed_stars = integer_stars %}
-            {% endif %}
+        {% if avg_overall_rating|int != avg_overall_rating %}
+        <i class="fas fa-star-half-alt" style="color: gold"></i>
+        {% set total_displayed_stars = integer_stars + 1 %}
+        {% else %}
+        {% set total_displayed_stars = integer_stars %}
+        {% endif %}
 
-            {% set empty_stars = 5 - total_displayed_stars %}
+        {% set empty_stars = 5 - total_displayed_stars %}
 
-            {% for i in range(empty_stars) %}
-            <i class="far fa-star" style="color: gold"></i>
-            {% endfor %}
+        {% for i in range(empty_stars) %}
+        <i class="far fa-star" style="color: gold"></i>
+        {% endfor %}
 
 
 
-        </div>
-        <div class="col-md-6 text-right">
-            <h3>Rating Distribution:</h3>
-            <p><strong>Aesthetics:</strong> {{ avg_aesthetics}}/5</p>
-            <p><strong>Cleanliness:</strong> {{ avg_cleanliness}}/5</p>
-            <p><strong>Peripherals:</strong> {{ avg_peripherals}}/5</p>
-            <p><strong>Vibes:</strong> {{ avg_vibes}}/5</p>
-        </div>
     </div>
+    <div class="col-md-6 text-right">
+        <h3>Rating Distribution:</h3>
+        <p><strong>Aesthetics:</strong> {{ avg_aesthetics}}/5</p>
+        <p><strong>Cleanliness:</strong> {{ avg_cleanliness}}/5</p>
+        <p><strong>Peripherals:</strong> {{ avg_peripherals}}/5</p>
+        <p><strong>Vibes:</strong> {{ avg_vibes}}/5</p>
+    </div>
+</div>
+
+
 
 <!-- Write a Review Button -->
 <div class="row mt-4">
-    <div class="col-md-6">
-        <a class="btn btn-primary" href="{{ url_for('write_review', building_name=building_name) }}">Write a Review</a>
+    <div class="col-lg-4 col-md-6">
+        <a class="btn btn-success btn-lg btn-block" href="{{ url_for('write_review', building_name=building_name) }}" style="max-width: 200px;">Write a Review</a>
     </div>
 </div>
 
 <!-- View Position Button -->
-<!-- Ensure that building_url is not None before rendering the button -->
 {% if building_url %}
 <div class="row mt-4">
-    <div class="col-md-6">
-        <a class="btn btn-info" href="{{ building_url }}" target="_blank">View Position</a>
+    <div class="col-lg-4 col-md-6">
+        <a class="btn btn-info btn-lg btn-block" href="{{ building_url }}" target="_blank" style="max-width: 200px;">View Position</a>
     </div>
 </div>
 {% endif %}
-
-
-
 
     <div class="row mt-4">
         <div class="col-md-12">
@@ -83,74 +81,54 @@
         {% endfor %}
     </div>
 
-<!-- Room Filter Dropdown -->
+<!-- User Ratings Title -->
 <div class="row mt-4">
-    <div class="col-md-6">
-        <label for="roomFilter">Filter by Room:</label>
-        <select class="form-control custom-dropdown" id="roomFilter" onchange="filterReviews()">
-            <option value="">All Rooms</option>
-            {% for room in rooms_with_reviews %}
-                <option value="{{ room }}">{{ room }}</option>
-            {% endfor %}
-        </select>
+    <div class="col-12">
+        <h3 style="display: inline-block;">{{ total_ratings }} User Ratings</h3>
+        <hr style="border-top: 2px solid #000; margin-top: 0.5rem;">
     </div>
 </div>
 
-
-
-
-
-    <!-- List of Reviews -->
-    <div class="row mt-4" id="reviewsContainer">
-        <div class="col-md-12">
-            <h3>{{ total_ratings }} Users Ratings:</h3>
-            {% for review in reviews %}
-            <div class="card mt-4">
-                <div class="card-header">
-                    <strong>Date:</strong> {{ review.date_created.strftime('%Y-%m-%d') }}
-                    {% if review.room %}
-                        <span class="room-info" style="display: none;">{{review.room}}</span>
-                    {% endif %}
+<!-- List of Reviews -->
+<div class="row mt-4" id="reviewsContainer">
+    <div class="col-md-12">
+        {% for review in reviews %}
+        <div class="card mt-4">
+            <div class="card-body">
+                <!-- Room number and timestamp -->
+                <div class="d-flex justify-content-between mb-2">
+                    <div style="background-color: #e9ecef; padding: 5px 10px; border-radius: 5px;">
+                        Room: <strong>{{ review.room }}</strong>
+                    </div>
+                    <small class="text-muted">{{ review.date_created.strftime('%b %d, %Y') }}</small>
                 </div>
-                <div class="card-body">
-                    <div class="review-scores">
-                        <span style="color: #152238;">Aesthetics: <b>{{ review.aesthetics }}</b></span>
-                        <span style="color: #152238;">Cleanliness: <b>{{ review.cleanliness }}</b></span>
-                        <span style="color: #152238;">Peripherals: <b>{{ review.peripherals }}</b></span>
-                        <span style="color: #152238;">Vibes: <b>{{ review.vibes }}</b></span>
-                    </div>
-                    <br>
-                    <p style="color: #152238;">{{ review.description }}</p>
-                    {% if review.room %}
-                    <p style="color: #152238;">Room: {{ review.room }}</p>
-                    {% endif %}
-                    <div class="button-container" style="display: flex">
-                        <form method="post" action="{{ url_for('like_review', review_id=review.id) }}">
-                            Helpful
-                            <button type="submit" class="btn like-button" data-review-id="{{ review.id }}"
-                                style="display: inline-block; margin-right: 2px;">
-                                <img src="{{ url_for('static', filename='img/thumbs-up.svg') }}" alt="like button"
-                                    height="22">
-                                <span class="like-count">{{ review.likes }}</span>
-                                <span class="tooltip">Helpful</span></button>
-                        </form>
-                        <form method="post" action="{{ url_for('dislike_review', review_id=review.id) }}">
-                            <button type="submit" class="btn dislike-button" data-review-id="{{ review.id }}"
-                                style="display: inline-block; margin-right: 2px;">
-                                <img src="{{ url_for('static', filename='img/thumbs-down.svg') }}" alt="dislike button"
-                                    height="22" style="transform: scaleX(-1);">
-                                <span class="dislike-count">{{ review.dislikes }}</span>
-                                <span class="tooltip">Not helpful</span>
-                            </button>
-                        </form>
-                    </div>
+                <!-- Review text -->
+                <p>{{ review.description }}</p>
+                <!-- Rating Badges -->
+                <div class="review-scores my-2">
+                    <span class="badge badge-warning">Aesthetics: {{ review.aesthetics }}</span>
+                    <span class="badge badge-warning">Cleanliness: {{ review.cleanliness }}</span>
+                    <span class="badge badge-warning">Peripherals: {{ review.peripherals }}</span>
+                    <span class="badge badge-warning">Vibes: {{ review.vibes }}</span>
+                </div>
+                <!-- Helpful text followed by Like/Dislike Buttons -->
+                <div class="d-flex align-items-center">
+                    <span class="mr-2">Helpful</span>
+                    <button type="button" class="btn like-button mr-1" data-review-id="{{ review.id }}">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span class="like-count">{{ review.likes }}</span>
+                    </button>
+                    <button type="button" class="btn dislike-button" data-review-id="{{ review.id }}">
+                        <i class="fas fa-thumbs-down"></i>
+                        <span class="dislike-count">{{ review.dislikes }}</span>
+                    </button>
                 </div>
             </div>
-            {% endfor %}
-            <br>
-            <button type="button" class="btn btn-light ml-2" onclick="window.history.back();">Back</button>
         </div>
+        {% endfor %}
     </div>
+</div>
+
     <script>
         function filterReviews() {
             const selectedRoom = document.getElementById('roomFilter').value;
@@ -218,3 +196,4 @@
     </script>
 
     {% endblock %}
+  

@@ -4,52 +4,83 @@
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1>Write a Review</h1>
+<!-- Similar container and fade-in effect as other pages -->
+<div class="container mt-5 fade-in">
+    <!-- Heading consistent with other pages -->
+    <h1 class="display-4 font-weight-normal text-center">Write a Review</h1>
     
-    <form method="POST" action="{{ url_for('review_page') }}">
+    <!-- Form with POST method -->
+    <form method="POST" action="{{ url_for('review_page') }}" class="my-4">
         {{ form.hidden_tag() }}
         
-        <div class="mb-3">
+        <!-- Styling form elements consistently with Bootstrap classes -->
+        <div class="form-group">
             {{ form.building.label(class="form-label") }}
-            {{ form.building(class="form-select") }}
+            {{ form.building(class="form-control form-select building-width") }}
         </div>
         
-        <div class="mb-3">
+        <div class="form-group">
             {{ form.aesthetics.label(class="form-label") }}
-            {{ form.aesthetics(class="form-select") }}
+            {{ form.aesthetics(class="form-control form-select rating-width") }}
         </div>
         
-        <div class="mb-3">
+        <div class="form-group">
             {{ form.cleanliness.label(class="form-label") }}
-            {{ form.cleanliness(class="form-select") }}
+            {{ form.cleanliness(class="form-control form-select rating-width") }}
         </div>
         
-        <div class="mb-3">
+        <div class="form-group">
             {{ form.peripherals.label(class="form-label") }}
-            {{ form.peripherals(class="form-select") }}
+            {{ form.peripherals(class="form-control form-select rating-width") }}
         </div>
 
-        <div class="mb-3">
+        <div class="form-group">
             {{ form.vibes.label(class="form-label") }}
-            {{ form.vibes(class="form-select") }}
+            {{ form.vibes(class="form-control form-select rating-width") }}
         </div>
         
-        <div class="mb-3">
+        <!-- Textarea for content with more rows for a better writing experience -->
+        <div class="form-group">
             {{ form.content.label(class="form-label") }}
-            {{ form.content(class="form-control", rows=3) }}
+            {{ form.content(class="form-control", rows=5) }}
         </div>
         
-        <div class="mb-3">
+        <div class="form-group">
             {{ form.classroom_name.label(class="form-label") }}
             {{ form.classroom_name(class="form-control") }}
         </div>
         
-        <div class="mb-3">
-            {{ form.submit(class="btn btn-primary") }}
-            <!-- Back Button -->
-            <button type="button" class="btn btn-light ml-2" onclick="window.history.back();">Back</button>
+        <!-- Consistent button styling -->
+        <div class="form-group text-center">
+            {{ form.submit(class="btn btn-success btn-lg") }}
+            <!-- Back button styled similarly to the "Search" button on the homepage -->
+            <button type="button" class="btn btn-outline-secondary btn-lg ml-2" onclick="window.history.back();">Back</button>
         </div>
     </form>
 </div>
+
+<!-- Script for the fade-in effect -->
+<script>
+    window.addEventListener("DOMContentLoaded", function() {
+        document.querySelector(".fade-in").classList.add("show");
+    });
+</script>
+
+<!-- Style for fade-in and specific widths for selects -->
+<style>
+    .fade-in {
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+    }
+    .fade-in.show {
+        opacity: 1;
+    }
+    /* Adjust the width of select elements */
+    .form-select.building-width {
+        width: auto; /* Adjust to content or set a specific width */
+    }
+    .form-select.rating-width {
+        width: 75px; /* This width is for the rating dropdowns */
+    }
+</style>
 {% endblock %}
