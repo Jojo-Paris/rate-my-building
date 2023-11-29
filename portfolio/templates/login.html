@@ -1,13 +1,34 @@
-{% extends 'base.html' %}
+{% extends 'home_base.html' %}
 {% block title %}
     Login to your Account
 {% endblock %}
 
 {% block content %}
+<style>
+    .my-card{
+      position: relative:
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .bg-image {
+      /* Set the background image URL */
+      background-image: url('{{ url_for('static', filename='img/csulb-bldg.png') }}');
+      /* Adjust background properties for positioning and size */
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      /* Set minimum height to 100% of the viewport height */
+      min-height: 100vh;
+      /* Set height to 100% of the viewport height */
+      height: 100vh;
+      background-opacity: 0.5;
+    }
+  </style>
 
+    <!--
     <div class="container fade-in mt-5">
         <div class="text-center">
-            <!--152238-->
+            152238
             <h1 class="h1 mb-3 font-weight-normal" style="color: #152238;">Login</h1>
             <br>
             <form method="POST" class="form-signin" style="color:white">
@@ -46,4 +67,51 @@
             </form>
         </div>
     </div>
+-->
+
+    <section class="vh-100 bg-image">
+        <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+          <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+              <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                <div class="card my-card" style="border-radius: 10px;">
+                  <div class="card-body p-5">
+                    <h2 class="text-uppercase text-center mb-5" style="margin-top: 5px;">Log in to account</h2>
+                    <form method="POST" action="{{ url_for('login_page') }}" class="form-signin">
+                      {{ form.hidden_tag() }}
+      
+                      <div style="color: #152238;">
+                        
+                      {{ form.username(class="form-control form-control-lg") }}
+                      {{ form.username.label() }}
+                      </div>
+                      <br>
+      
+                      <div style="color: #152238;">
+                      {{ form.password(class="form-control form-control-lg") }}
+                      {{ form.password.label() }}
+                      </div>
+
+                    <div class="checkbox mt-3 text-center" style="color: #152238;">
+                        {{ form.remember_me() }} {{ form.remember_me.label() }}
+                    </div>
+                    <br>
+                      
+      
+                      {{ form.submit(class="btn btn-success btn-block btn-lg") }}
+                   
+      
+                      <br>
+      
+                      <p class="text-center text-muted mt-5 mb-0">Do not have an account? <a href="{{ url_for('register_page') }}"
+                          class="fw-bold text-body"><u>Register here</u></a></p>
+                    </form>
+      
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 {% endblock %}
